@@ -140,22 +140,27 @@ def setup_gui():
     app = tk.Tk()
     app.title("IPC Debugger (Windows Compatible)")
     app.geometry("800x500")
+from datetime import datetime
+def update_output(output_widget, message):
+      """Updates the GUI output area with timestamps."""
+      timestamp = datetime.now().strftime("[%H:%M:%S] ")
+      output_widget.insert(tk.END, timestamp + message)
+      output_widget.see(tk.END)
+output_text = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=20, font=("Courier", 10))
+output_text.pack(pady=10)
 
-    output_text = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=20, font=("Courier", 10))
-    output_text.pack(pady=10)
+tk.Label(app, text="Inter-Process Communication (IPC) Debugger", font=("Helvetica", 16, "bold")).pack(pady=10)
 
-    tk.Label(app, text="Inter-Process Communication (IPC) Debugger", font=("Helvetica", 16, "bold")).pack(pady=10)
+run_btn = tk.Button(app, text="Run Debugger", command=lambda: run_debugger(output_text), bg="green", fg="white", font=("Helvetica", 12))
+run_btn.pack(pady=5)
 
-    run_btn = tk.Button(app, text="Run Debugger", command=lambda: run_debugger(output_text), bg="green", fg="white", font=("Helvetica", 12))
-    run_btn.pack(pady=5)
+stop_btn = tk.Button(app, text="Stop Debugger", command=lambda: stop_debugger(output_text), bg="orange", fg="white", font=("Helvetica", 12))
+stop_btn.pack(pady=5)
 
-    stop_btn = tk.Button(app, text="Stop Debugger", command=lambda: stop_debugger(output_text), bg="orange", fg="white", font=("Helvetica", 12))
-    stop_btn.pack(pady=5)
+clear_btn = tk.Button(app, text="Clear Log", command=lambda: clear_output(output_text), bg="red", fg="white", font=("Helvetica", 12))
+clear_btn.pack(pady=5)
 
-    clear_btn = tk.Button(app, text="Clear Log", command=lambda: clear_output(output_text), bg="red", fg="white", font=("Helvetica", 12))
-    clear_btn.pack(pady=5)
-
-    app.mainloop()
+app.mainloop()
 
 # Main Execution
 if __name__ == "__main__":
