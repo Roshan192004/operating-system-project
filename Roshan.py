@@ -7,6 +7,7 @@ from tkinter import scrolledtext
 from multiprocessing import Process, Queue, Pipe, Semaphore, shared_memory
 from datetime import datetime
 
+processes = []
 # Global list to track running processes
 processes = []
 
@@ -115,7 +116,14 @@ def monitor_sockets(output_widget):
 
     while not queue.empty():
         message = queue.get()
-        update_output(output_widget, message)
+        
+def stop_debugger(output_widget):
+      """Stops all running IPC processes."""
+      for proc in processes:
+          if proc.is_alive():
+              proc.terminate()
+      update_output(output_widget, "\n[STOPPED] All IPC processes terminated.\n")
+update_output(output_widget, message)
 
 # Stop running processes
 def stop_debugger(output_widget):
@@ -147,6 +155,8 @@ monitor_semaphore(output_widget)
 monitor_sockets(output_widget)
 update_output(output_widget, "\nIPC Monitoring Completed!\n")
 
+stop_btn = tk.Button(app, text="Stop Debugger", command=lambda: stop_debugger(output_text), bg="orange", fg="white", font=("Helvetica", 12))
+stop_btn.pack(pady=5)
 # GUI Setup
 def setup_gui():
     """Creates the GUI window."""
