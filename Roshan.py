@@ -107,7 +107,9 @@ def monitor_sockets(output_widget):
 
     server_process.start()
     client_process.start()
-
+    def clear_output(output_widget):
+           """Clears the output log."""
+    output_widget.delete(1.0, tk.END)
     client_process.join()
     server_process.join()
 
@@ -130,9 +132,20 @@ def run_debugger(output_widget):
     update_output(output_widget, f"\n---- IPC Debugger (PID: {os.getpid()}) ----\n")
     monitor_pipes(output_widget)
     monitor_shared_memory(output_widget)
-    monitor_semaphore(output_widget)
-    monitor_sockets(output_widget)
-    update_output(output_widget, "\nIPC Monitoring Completed!\n")
+output_text = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=20, font=("Courier", 10))
+output_text.pack(pady=10)
+   
+clear_btn = tk.Button(app, text="Clear Log", command=lambda: clear_output(output_text), bg="red", fg="white",
+                             font=("Helvetica", 12))
+clear_btn.pack(pady=5)
+   
+       # "Run Debugger" button
+btn = tk.Button(app, text="Run Debugger", command=lambda: run_debugger(output_text), bg="green", fg="white",
+                       font=("Helvetica", 12))
+btn.pack(pady=5)
+monitor_semaphore(output_widget)
+monitor_sockets(output_widget)
+update_output(output_widget, "\nIPC Monitoring Completed!\n")
 
 # GUI Setup
 def setup_gui():
